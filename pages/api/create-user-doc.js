@@ -1,6 +1,6 @@
 // pages/api/create-user-doc.js
 
-import { admin, db } from "../../lib/firebase-admin";
+import { admin, db } from "../../lib/firebaseAdmin";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     const { v4: uuidv4 } = await import("uuid");
     const generatedReferralCode = uuidv4().substring(0, 8);
 
-    // Crea utente
+    // Crea documento utente in Firestore
     await db.collection("users").doc(uid).set({
       isPremium: false,
       trialStartDate: new Date(),
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       referralCode: generatedReferralCode,
     });
 
-    // Se referralCode usato, aggiorna il referente
+    // Se è stato usato un referralCode, aggiorna il conteggio del referente
     if (referralCode) {
       const refSnapshot = await db
         .collection("users")

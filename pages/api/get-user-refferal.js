@@ -1,10 +1,13 @@
 // pages/api/get-user-referral.js
 
-import { db } from "../../lib/firebase-admin";
+import { db } from "../../lib/firebaseAdmin";
 
 export default async function handler(req, res) {
   const { uid } = req.query;
-  if (!uid) return res.status(400).json({ error: "UID mancante" });
+
+  if (!uid) {
+    return res.status(400).json({ error: "UID mancante" });
+  }
 
   try {
     const docRef = db.collection("users").doc(uid);
@@ -17,10 +20,10 @@ export default async function handler(req, res) {
     const userData = docSnap.data();
     res.status(200).json({
       referralCode: userData.referralCode || "",
-      referrals: userData.referrals || 0, // AGGIUNTO
+      referrals: userData.referrals || 0,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Errore Firestore:", err);
     res.status(500).json({ error: "Errore durante il recupero del codice referral" });
   }
 }
